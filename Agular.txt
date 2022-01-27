@@ -1,0 +1,239 @@
+____________________________________________________________________________
+Angular2 event binding
+A component class property to an HTML element property.
+1. Interpolation
+2. Property Binding
+3. Attribute Binding
+4. Class Binding
+5. Style Binding
+
+
+With event binding we can also use the on- prefix alternative as shown below. This is known as the canonical form
+<button on-click="onClick()">Click me</button>
+
+Event Binding Example : 
+
+import { Component } from '@angular/core';
+
+@Component({
+    selector: 'my-app',
+    template: `<button (click)='onClick()' >Click me</button>`
+})
+export class AppComponent {
+    onClick(): void {
+        console.log('Button Clicked');
+    }
+}
+
+Every time we click the button, 'Button Clicked' message is logged to the console. You can see this message under the Console tab, in the browser developer tools.
+
+Event Binding Example : 
+
+import { Component } from '@angular/core';
+
+@Component({
+    selector: 'my-app',
+    template: `<button (click)='onClick()' >Click me</button>`
+})
+export class AppComponent {
+    onClick(): void {
+        console.log('Button Clicked');
+    }
+}
+
+
+<button (click)='toggleDetails()'>
+    {{showDetails ? 'Hide' : 'Show'}} Details
+</button>
+
+import { Component } from '@angular/core';
+
+@Component({
+    selector: 'my-employee',
+    templateUrl: 'app/employee/employee.component.html',
+    styleUrls: ['app/employee/employee.component.css']
+})
+export class EmployeeComponent {
+    columnSpan: number = 2;
+    firstName: string = 'Tom';
+    lastName: string = 'Hopkins';
+    gender: string = 'Male';
+    age: number = 20;
+    showDetails: boolean = false;
+
+    toggleDetails(): void {
+        this.showDetails = !this.showDetails;
+    }
+}
+____________________________________________________________________________
+Two way data binding in angular 2
+
+Name : <input [value]='name' (input)='name = $event.target.value'>
+<br>
+You entered : {{name}}
+
+[value]='name' : This property binding flows data from the component class to element property 
+(input)='name = $event.target.value' : This event binding flows data in the opposite direction i.e from the element to component class property "name"
+$event - Is exposed by angular event binding, and contains the event data. To retrieve the value from the input element use - $event.target.value.
+name = $event.target.value - This expression updates the value in the name property in the component class
+You entered : {{name}} - This interpolation expression will then display the value on the web page.
+
+
+<input [value]='name' (input)='name = $event.target.value'>
+Like this : Name : <input [(ngModel)]='name'>
+
+Here are the steps to import FormsModule into our AppModule
+1. Open app.module.ts file
+2. Include the following import statement in it
+    import { FormsModule } from '@angular/forms';
+3. Also, include FormsModule in the 'imports' array of @NgModule
+    imports: [BrowserModule, FormsModule]
+	So here is the syntax for using two-way data binding in Angular
+	
+<input [(ngModel)]='name'>
+____________________________________________________________________________
+Angular Angular ngFor directive
+
+export class EmployeeListComponent {
+    employees: any[] = [
+        {
+            code: 'emp101', name: 'Tom', gender: 'Male',
+            annualSalary: 5500, dateOfBirth: '25/6/1988'
+        },
+        {
+            code: 'emp102', name: 'Alex', gender: 'Male',
+            annualSalary: 5700.95, dateOfBirth: '9/6/1982'
+        },
+        {
+            code: 'emp103', name: 'Mike', gender: 'Male',
+            annualSalary: 5900, dateOfBirth: '12/8/1979'
+        },
+        {
+            code: 'emp104', name: 'Mary', gender: 'Female',
+            annualSalary: 6500.826, dateOfBirth: '14/10/1980'
+        },
+    ];
+}
+<tr *ngFor='let employee of employees'>
+            <td>{{employee.code}}</td>
+            <td>{{employee.name}}</td>
+            <td>{{employee.gender}}</td>
+            <td>{{employee.annualSalary}}</td>
+            <td>{{employee.dateOfBirth}}</td>
+</tr>
+<tr *ngIf="!employees || employees.length==0">
+    <td colspan="5">
+        No employees to display
+    </td>
+</tr>
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+
+import { AppComponent } from './app.component';
+import { EmployeeComponent } from './employee/employee.component';
+import { EmployeeListComponent } from './employee/employeeList.component';
+
+@NgModule({
+    imports: [BrowserModule],
+    declarations: [AppComponent, EmployeeComponent, EmployeeListComponent],
+    bootstrap: [AppComponent]
+})
+
+export class AppModule { }
+
+import { Component } from '@angular/core';
+
+@Component({
+    selector: 'my-app',
+    template: `<list-employee></list-employee>`
+})
+
+export class AppComponent { }
+____________________________________________________________________________
+Angular ngFor trackBy
+Using trackyBy with ngFor directive : 
+ngFor directive may perform poorly with large lists
+A small change to the list like, adding a new item or removing an existing item may trigger a cascade of DOM manipulations
+
+<table>
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Gender</th>
+            <th>Annual Salary</th>
+            <th>Date of Birth</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor='let employee of employees'>
+            <td>{{employee.code}}</td>
+            <td>{{employee.name}}</td>
+            <td>{{employee.gender}}</td>
+            <td>{{employee.annualSalary}}</td>
+            <td>{{employee.dateOfBirth}}</td>
+        </tr>
+        <tr *ngIf="!employees || employees.length==0">
+            <td colspan="5">
+                No employees to display
+            </td>
+        </tr>
+    </tbody>
+	OR
+    <tbody>
+        <tr *ngFor='let employee of employees; let i=index'> // also this <tr *ngFor='let employee of employees; let isFirst = first; let isLast = last'>
+            <td>{{employee.code}}</td>
+            <td>{{employee.name}}</td>
+            <td>{{employee.gender}}</td>
+            <td>{{employee.annualSalary}}</td>
+            <td>{{employee.dateOfBirth}}</td>
+            <td>{{i}}</td>
+        </tr>
+        <tr *ngIf="!employees || employees.length==0">
+            <td colspan="5">
+                No employees to display
+            </td>
+        </tr>
+		OR
+		<tr *ngFor='let employee of employees; let isEven = even; let isOdd = odd'>
+            <td>{{employee.code}}</td>
+            <td>{{employee.name}}</td>
+            <td>{{employee.gender}}</td>
+            <td>{{employee.annualSalary}}</td>
+            <td>{{employee.dateOfBirth}}</td>
+            <td>{{isEven}}</td>
+            <td>{{isOdd}}</td>
+        </tr>
+        <tr *ngIf="!employees || employees.length==0">
+            <td colspan="5">
+                No employees to display
+            </td>
+        </tr>
+    </tbody>
+</table>
+<br />
+<button (click)='getEmployees()'>Refresh Employees</button>
+____________________________________________________________________________
+Angular pipes
+
+____________________________________________________________________________
+Angular pipes
+
+
+____________________________________________________________________________
+
+
+____________________________________________________________________________
+
+
+____________________________________________________________________________
+
+
+____________________________________________________________________________
+
+
+____________________________________________________________________________
+
+
+____________________________________________________________________________
